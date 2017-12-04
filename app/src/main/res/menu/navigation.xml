@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_matches"
+        android:icon="@drawable/flame"
+        android:title="Matches" />
+
+    <item
+        android:id="@+id/navigation_connections"
+        android:icon="@drawable/handwave"
+        android:title="Connections" />
+
+
+</menu>

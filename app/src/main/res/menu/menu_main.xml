@@ -5,15 +5,13 @@
 
 
     <item
-        android:title="Matches"
-        android:id="@+id/action_delete"
-        app:showAsAction="always|withText"
+        android:title="Log Out"
+        android:id="@+id/action_log_out"
         />
 
     <item
-        android:title="Connections"
-        android:id="@+id/action_map"
-        app:showAsAction="always|withText"
+        android:title="Help"
+        android:id="@+id/action_help"
         />
 
 </menu>
