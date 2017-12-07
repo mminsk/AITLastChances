@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/profile"
+        android:title="Profile" />
+
+    <item
         android:id="@+id/navigation_matches"
         android:icon="@drawable/flame"
         android:title="Matches" />
