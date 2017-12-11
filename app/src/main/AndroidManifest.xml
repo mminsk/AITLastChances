@@ -23,7 +23,10 @@
             android:name=".ProfileActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ConnectionsActivity" />
-        <activity android:name=".MatchesActivity"></activity>
+        <activity android:name=".MatchesActivity" />
+        <activity
+            android:name=".CreateConnectionActivity"
+            android:theme="@style/Base.Theme.AppCompat.Light.Dialog"/>
     </application>
 
 </manifest>

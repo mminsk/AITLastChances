@@ -5,12 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="hu.ait.android.aitlastchances.ConnectionsActivity">
+    <include
+        layout="@layout/app_bar_post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <TextView
+    <Button
+        android:id="@+id/btnGet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connections"
-        android:textSize="24sp"/>
+        android:text="Get Connections"/>
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add"/>
+
+
+
+
 
 
 </LinearLayout>

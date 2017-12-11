@@ -10,6 +10,10 @@
         android:layout_height="wrap_content"
         android:text="Matches"
         android:textSize="24sp"/>
+    <include
+        layout="@layout/app_bar_post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 

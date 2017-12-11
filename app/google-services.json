@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "307903787520",
+    "firebase_url": "https://ait-last-chances.firebaseio.com",
+    "project_id": "ait-last-chances",
+    "storage_bucket": "ait-last-chances.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:307903787520:android:f4e28d8cd6aa10ca",
+        "android_client_info": {
+          "package_name": "hu.ait.android.aitlastchances"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "307903787520-qjdfpva27ru82v189b9v7p45dtin3e5u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hu.ait.android.aitlastchances",
+            "certificate_hash": "bedac485a372048363e12313190bf1a253321ed5"
+          }
+        },
+        {
+          "client_id": "307903787520-v8vjplcl59cr4eg2gicqa1kkl7gqmkqe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu4-IznyFmFl4hoT0kun3gnPbuJ8b2XrE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "307903787520-v8vjplcl59cr4eg2gicqa1kkl7gqmkqe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
