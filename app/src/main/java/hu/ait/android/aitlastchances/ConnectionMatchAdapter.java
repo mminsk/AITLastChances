@@ -1,12 +1,15 @@
 package hu.ait.android.aitlastchances;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -49,6 +52,11 @@ public class ConnectionMatchAdapter extends RecyclerView.Adapter<ConnectionMatch
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ConnectionMatch connectionMatch = connectionMatchList.get(position);
         holder.tvName.setText(connectionMatch.getName());
+        Uri imageUrl = connectionMatch.getImageUrl();
+        if (imageUrl != null) {
+            Glide.with(context).load(imageUrl).into(holder.ivImage);
+
+        }
 
 
     }
@@ -93,11 +101,13 @@ public class ConnectionMatchAdapter extends RecyclerView.Adapter<ConnectionMatch
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
         public TextView tvName;
+        public ImageView ivImage;
 
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
+            ivImage = itemView.findViewById(R.id.ivUserImg);
 
         }
     }

@@ -1,5 +1,7 @@
 package hu.ait.android.aitlastchances.data;
 
+import android.net.Uri;
+
 /**
  * Created by madisonminsk on 11/20/17.
  */
@@ -8,15 +10,15 @@ public class ConnectionMatch {
 
     private String name;
 
-    public String getImageUrl() {
+    public Uri getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(Uri imageUrl) {
         this.imageUrl = imageUrl;
     }
 
-    private String imageUrl;
+    private Uri imageUrl;
 
     public String getName() {
         return name;

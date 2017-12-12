@@ -30,6 +30,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hu.ait.android.aitlastchances.data.ConnectionMatch;
 import hu.ait.android.aitlastchances.data.User;
 
 public class LoginActivity extends AppCompatActivity {
@@ -66,18 +67,15 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loadRegisteredUsers(DatabaseReference ref) {
 
-        Map<String, String> usersToID = new HashMap<String, String>();
-
-        usersToID.put("Emma Kennelly", "evvzpn4CeZY0OhBJPrh0PU19ZVs1");
-        usersToID.put("Madison Minsk", "1HcwuH7LtDat8xypQTJI5SagTsx1");
-        for (String user : usersToID.keySet()) {
-            ref.child("registered").child(user).setValue(usersToID.get(user));
+        ArrayList<String> users = new ArrayList<String>();
+        users.add("Emma Kennelly");
+        users.add("Madison Minsk");
+        users.add("Test User1");
+        users.add("Test User2");
+        users.add("Test User3");
+        for (String user : users) {
+            ref.child("registered").child(user).setValue(new ConnectionMatch(user));
         }
-        List<String> sentconnections = Arrays.asList("connection1", "connection2", "Madison Minsk");
-        List<String> recconnections = Arrays.asList("Madison Minsk");
-//        ref.child("connections").child("Emma Kennelly").child("sent").setValue(sentconnections);
-//        ref.child("connections").child("Emma Kennelly").child("received").setValue(recconnections);
-//        ref.child("connections").child("Madison Minsk").child("sent").setValue(new ArrayList<String>());
 
 
     }

@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,9 +22,18 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -33,6 +43,7 @@ import java.io.ByteArrayOutputStream;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hu.ait.android.aitlastchances.data.ConnectionMatch;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -55,22 +66,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         myUsername = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        storageRef.child("images/"+myUsername).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String imgUrl = uri.toString();
-                Glide.with(ProfileActivity.this).load(imgUrl).into(imgUpload);
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
-
-
+        final Uri myImageUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+        if (myImageUrl != null) {
+            Glide.with(ProfileActivity.this).load(myImageUrl).into(imgUpload);
+        }
 
 
     }
@@ -126,7 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
     };
 
 
-    public void uploadImage() throws Exception {
+    private void uploadImage() throws Exception {
         imgUpload.setDrawingCacheEnabled(true);
         imgUpload.buildDrawingCache();
         Bitmap bitmap = imgUpload.getDrawingCache();
@@ -152,9 +151,38 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-
+                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                uploadProfileImage(downloadUrl.toString());
             }
         });
+    }
+
+    private void uploadProfileImage(final String... imageUrl) {
+        final Uri myImageUrl = Uri.parse(imageUrl[0]);
+        if (imageUrl != null && imageUrl.length>0) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setPhotoUri(myImageUrl)
+                    .build();
+            user.updateProfile(profileUpdates)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(ProfileActivity.this, "User profile image updated.", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    });
+
+            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child("registered").child(myUsername);
+            myRef.child("image").setValue(imageUrl[0]);
+        }
+
+
+
+
+
     }
 
     @OnClick(R.id.btnUpload)

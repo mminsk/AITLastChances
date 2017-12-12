@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -57,7 +58,7 @@ public class MatchesActivity extends AppCompatActivity {
 
     private void initReceivedConnectionsListener() {
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("connections").child(myUsername).child("received");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("registered").child(myUsername).child("received");
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -95,11 +96,14 @@ public class MatchesActivity extends AppCompatActivity {
 
     private void initSentConnectionsListener() {
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("connections").child(myUsername).child("sent");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("registered").child(myUsername).child("sent");
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
+                if (conn.getImageUrl() == null && dataSnapshot.child("image").getValue() != null) {
+                    conn.setImageUrl(Uri.parse(dataSnapshot.child("image").getValue(String.class)));
+                }
                 sentAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
             }
 

@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -31,6 +33,7 @@ public class ConnectionsActivity extends AppCompatActivity {
     private String myUsername;
     private ConnectionMatchAdapter adapter;
     ArrayList<ConnectionMatch> connections = null;
+    private DatabaseReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,7 @@ public class ConnectionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_connections);
 
         myUsername = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-
+        ref = FirebaseDatabase.getInstance().getReference();
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewPosts);
         adapter = new ConnectionMatchAdapter(this);
@@ -62,11 +65,12 @@ public class ConnectionsActivity extends AppCompatActivity {
 
     private void initConnectionsListener() {
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("connections").child(myUsername).child("sent");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("registered").child(myUsername).child("sent");
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
+
                 adapter.addConnectionMatch(conn, dataSnapshot.getKey());
             }
 
@@ -121,16 +125,54 @@ public class ConnectionsActivity extends AppCompatActivity {
     }
 
     private void addConnection(String connection) {
-        String key = FirebaseDatabase.getInstance().getReference().child("posts").push().getKey();
+        final String nameToConnectWith = connection;
+        final String key = ref.child("registered").child(myUsername).push().getKey();
         ConnectionMatch toConnection = new ConnectionMatch(connection);
-        ConnectionMatch fromConnection = new ConnectionMatch(myUsername);
-        FirebaseDatabase.getInstance().getReference().child("connections").child(connection).child("received").child(key).setValue(fromConnection);
-        FirebaseDatabase.getInstance().getReference().child("connections").child(myUsername).child("sent").child(key).setValue(toConnection).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+        FirebaseDatabase.getInstance().getReference().child("registered").child(myUsername).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(ConnectionsActivity.this, "Connection created", Toast.LENGTH_SHORT).show();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ConnectionMatch fromConnection = dataSnapshot.getValue(ConnectionMatch.class);
+                if (fromConnection != null) {
+                    FirebaseDatabase.getInstance().getReference().child("registered").child(nameToConnectWith).child("received").child(key).setValue(fromConnection);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
+
+        FirebaseDatabase.getInstance().getReference().child("registered").child(nameToConnectWith).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ConnectionMatch toConnection = dataSnapshot.getValue(ConnectionMatch.class);
+
+                if (toConnection != null) {
+                    if (dataSnapshot.child("image").getValue(String.class) != null && toConnection.getImageUrl() == null) {
+                        toConnection.setImageUrl(Uri.parse(dataSnapshot.child("image").getValue(String.class)));
+                    }
+                    FirebaseDatabase.getInstance().getReference().child("registered").child(myUsername).child("sent").child(key).setValue(toConnection).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(ConnectionsActivity.this, "Connection created", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
     }
 
 
