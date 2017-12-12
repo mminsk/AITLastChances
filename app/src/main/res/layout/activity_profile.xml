@@ -49,41 +49,57 @@
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_below="@+id/appbar"
-        android:layout_margin="25dp"
         android:layout_height="0dp"
         android:layout_weight="1">
-    >
 
 
-        <TextView
-            android:id="@+id/tvMatches"
+        <ImageView
+            android:id="@+id/ivUploadImg"
+            android:layout_marginTop="5dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/common_google_signin_btn_icon_light"
+            android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:id="@+id/btnUpload"
+            android:layout_width="150dp"
+            android:layout_height="35dp"
+            android:layout_below="@+id/ivUploadImg"
+            android:layout_centerHorizontal="true"
+            android:text="Upload"
+            android:backgroundTint="#ffffff"/>
+
+        <LinearLayout
+            android:layout_below="@+id/btnUpload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Matches"
-            android:textSize="24sp"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="20dp"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvYourConnections"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvMatches"
-            android:text="Connections"
-            android:textSize="24sp"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="20dp"/>
+            <TextView
+                android:id="@+id/tvMatches"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Matches"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tvYourConnections"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Connections"
+                android:textSize="20sp" />
 
 
-        <TextView
-            android:id="@+id/tvConnectingWithYou"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvYourConnections"
-            android:text="Connected with You"
-            android:textSize="24sp"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="20dp"/>
+            <TextView
+                android:id="@+id/tvConnectingWithYou"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Connected with You"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+
 
 
     </RelativeLayout>
