@@ -71,11 +71,7 @@ public class ConnectionsActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
 
-
-
                 adapter.addConnectionMatch(conn, dataSnapshot.getKey());
-
-
 
             }
 
