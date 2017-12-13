@@ -310,7 +310,7 @@ public class ProfileActivity extends AppCompatActivity {
                 ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
 
                 sentAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
-                tvConnectingWithYou.setText("You have sent " + Integer.toString(sentAdapter.getItemCount()) + " connections.");
+                tvSentConnections.setText("You have sent " + Integer.toString(sentAdapter.getItemCount()) + " connections.");
             }
 
             @Override
