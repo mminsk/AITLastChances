@@ -105,7 +105,6 @@ public class LoginActivity extends AppCompatActivity {
                 progressDialog.dismiss();
 
                 if (task.isSuccessful()) {
-                    // open profile Activity
                     final String username = etFirstName.getText().toString() + " " + etLastName.getText().toString();
                     FirebaseUser fbUser = task.getResult().getUser();
                     fbUser.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(username).build());

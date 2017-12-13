@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:textSize="17sp"
-            android:text="See the number of matches and connections you've made, and uplaod a profile picture!"/>
+            android:text="See the number of matches and connections you've made, and upload a profile picture!"/>
 
 
     </LinearLayout>
@@ -78,6 +78,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:text="This applicaiton was made by Madison Minsk and Emma Kennelly. Please connect them to set up a time to discuss any concerns or recommendatoins you may have. They prefer all meetings to take place at Starbucks. "/>
+        android:text="This applicaiton was made by Madison Minsk and Emma Kennelly. Please connect them to set up a time to discuss any concerns or recommendations you may have. They prefer all meetings to take place at Starbucks. "/>
 
 </LinearLayout>

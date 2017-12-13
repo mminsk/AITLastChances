@@ -32,7 +32,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -180,20 +179,18 @@ public class ProfileActivity extends AppCompatActivity {
         String newImage = myUsername+".jpg";
         StorageReference newImageRef = storageRef.child(newImage);
         StorageReference newImageImagesRef = storageRef.child("images/"+newImage);
-        newImageRef.getName().equals(newImageImagesRef.getName());    // true
-        newImageRef.getPath().equals(newImageImagesRef.getPath());    // false
+        newImageRef.getName().equals(newImageImagesRef.getName());
+        newImageRef.getPath().equals(newImageImagesRef.getPath());
 
         UploadTask uploadTask = newImageImagesRef.putBytes(imageInBytes);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
                 Toast.makeText(ProfileActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 uploadProfileImage(downloadUrl.toString());
             }
@@ -248,7 +245,6 @@ public class ProfileActivity extends AppCompatActivity {
                     matchesAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
                     tvMatches.setText("You have " + Integer.toString(matchesAdapter.getItemCount()) + " matches!");
                 }
-
             }
 
             @Override
@@ -272,8 +268,6 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-
-
 
     }
 

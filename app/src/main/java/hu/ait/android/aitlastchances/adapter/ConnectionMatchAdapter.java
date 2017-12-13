@@ -31,8 +31,6 @@ public class ConnectionMatchAdapter extends RecyclerView.Adapter<ConnectionMatch
     private List<ConnectionMatch> connectionMatchList;
     private List<String> postKeys;
     private List<String> names;
-    private static String uId;
-    private int lastPosition = -1;
     private DatabaseReference postsRef;
 
     public ConnectionMatchAdapter(Context context) {

@@ -1,13 +1,5 @@
 package hu.ait.android.aitlastchances;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -93,11 +92,7 @@ public class ConnectionsActivity extends AppCompatActivity {
 
             }
         });
-
-
-
     }
-
 
 
     private void showCreateConnectionActivity() {
@@ -128,20 +123,16 @@ public class ConnectionsActivity extends AppCompatActivity {
             Toast.makeText(ConnectionsActivity.this, "Oops, you already connected with this person!", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Find ConnectionMatch of person you want to connect with in registered tree, and add it to my "sent" list
 
         ref.child("registered").child(nameToConnectWith).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // datasnapshot contains person's ConnectionMatch
                 ConnectionMatch newConnectionToSend = dataSnapshot.child("connectionmatch").getValue(ConnectionMatch.class);
 
                 if (newConnectionToSend == null) {
                     newConnectionToSend = new ConnectionMatch(nameToConnectWith);
                 }
 
-
-                // now add this to my list of "sent" connections
                 String key = ref.child(myUsername).child("sent").push().getKey();
                 ref.child("registered").child(myUsername).child("sent").child(key).setValue(newConnectionToSend);
             }
@@ -152,12 +143,9 @@ public class ConnectionsActivity extends AppCompatActivity {
             }
         });
 
-        // Now add my ConnectionMatch to new connection's "received" list
-
         ref.child("registered").child(myUsername).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // datasnapshot should contain my ConnectionMatch object
                 ConnectionMatch myConnectionData = dataSnapshot.child("connectionmatch").getValue(ConnectionMatch.class);
                 String key = ref.child(nameToConnectWith).child("received").push().getKey();
                 ref.child("registered").child(nameToConnectWith).child("received").child(key).setValue(myConnectionData).addOnCompleteListener(new OnCompleteListener<Void>() {
