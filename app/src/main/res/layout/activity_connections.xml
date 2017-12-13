@@ -4,27 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="hu.ait.android.aitlastchances.ConnectionsActivity">
     <include
-        layout="@layout/app_bar_post"
+        layout="@layout/app_bar_post_connections"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <Button
-        android:id="@+id/btnGet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get Connections"/>
-
-    <Button
-        android:id="@+id/btnAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add"/>
-
-
-
-
 
 
 </LinearLayout>

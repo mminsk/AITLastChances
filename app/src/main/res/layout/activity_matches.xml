@@ -5,17 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="hu.ait.android.aitlastchances.MatchesActivity">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Matches"
-        android:textSize="24sp"/>
     <include
-        layout="@layout/app_bar_post"
+        layout="@layout/app_bar_post_matches"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
 
 
 </LinearLayout>
