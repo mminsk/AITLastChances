@@ -2,6 +2,7 @@ package hu.ait.android.aitlastchances;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,11 +56,19 @@ public class ConnectionMatchAdapter extends RecyclerView.Adapter<ConnectionMatch
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ConnectionMatch connectionMatch = connectionMatchList.get(position);
         holder.tvName.setText(connectionMatch.getName());
-        String imageUrl = connectionMatch.getImageUrl();
-        if (imageUrl != null) {
-            Glide.with(context).load(Uri.parse(imageUrl)).into(holder.ivImage);
-
-        }
+        FirebaseStorage.getInstance().getReference().child("images").child(connectionMatch.getName()+".jpg").getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Glide.with(context).load(uri).into(holder.ivImage);
+                    }
+                        // Got the download URL for 'users/me/profile.png'
+                    });
+//        String imageUrl = connectionMatch.getImageUrl();
+//        if (imageUrl != null) {
+//
+//
+//        }
 
 
     }
