@@ -70,17 +70,13 @@ public class ConnectionsActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
-                if (adapter.containsConnectionMatchByName(conn.getName())) {
-                    Toast.makeText(ConnectionsActivity.this, "Oops, you already connected with this person!", Toast.LENGTH_SHORT).show();
-                }
-                else {
-
-                    adapter.addConnectionMatch(conn, dataSnapshot.getKey());
 
 
-                    Toast.makeText(ConnectionsActivity.this, "Your connection was sent!", Toast.LENGTH_SHORT).show();
 
-                }
+                adapter.addConnectionMatch(conn, dataSnapshot.getKey());
+
+
+
             }
 
             @Override
@@ -134,6 +130,10 @@ public class ConnectionsActivity extends AppCompatActivity {
     }
 
     private void addConnection(final String nameToConnectWith) {
+        if (adapter.containsConnectionMatchByName(nameToConnectWith)) {
+            Toast.makeText(ConnectionsActivity.this, "Oops, you already connected with this person!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         // Find ConnectionMatch of person you want to connect with in registered tree, and add it to my "sent" list
 
         ref.child("registered").child(nameToConnectWith).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -166,7 +166,12 @@ public class ConnectionsActivity extends AppCompatActivity {
                 // datasnapshot should contain my ConnectionMatch object
                 ConnectionMatch myConnectionData = dataSnapshot.child("connectionmatch").getValue(ConnectionMatch.class);
                 String key = ref.child(nameToConnectWith).child("received").push().getKey();
-                ref.child("registered").child(nameToConnectWith).child("received").child(key).setValue(myConnectionData);
+                ref.child("registered").child(nameToConnectWith).child("received").child(key).setValue(myConnectionData).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(ConnectionsActivity.this, "Your connection was sent!", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override

@@ -64,7 +64,7 @@ public class MatchesActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
                 if (sentAdapter.containsConnectionMatchByName(conn.getName())) {
-
+                    Toast.makeText(MatchesActivity.this, "You have a new match!", Toast.LENGTH_SHORT);
                     recAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
                 }
             }

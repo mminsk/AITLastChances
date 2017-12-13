@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +27,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,7 +50,15 @@ public class ProfileActivity extends AppCompatActivity {
     Button btnUpload;
     @BindView(R.id.ivUploadImg)
     ImageView imgUpload;
+    @BindView(R.id.tvConnectingWithYou)
+    TextView tvConnectingWithYou;
+    @BindView(R.id.tvMatches)
+    TextView tvMatches;
+
     private String myUsername;
+
+    private ConnectionMatchAdapter recAdapter;
+    private ConnectionMatchAdapter sentAdapter;
 
 
 
@@ -66,7 +76,14 @@ public class ProfileActivity extends AppCompatActivity {
         final Uri myImageUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
         if (myImageUrl != null) {
             Glide.with(ProfileActivity.this).load(myImageUrl).into(imgUpload);
+            uploadProfileImage(myImageUrl.toString());
         }
+
+        sentAdapter = new ConnectionMatchAdapter(this);
+        recAdapter = new ConnectionMatchAdapter(this);
+        initSentConnectionsListener();
+        initReceivedConnectionsListener();
+
 
 
     }
@@ -106,8 +123,6 @@ public class ProfileActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_profile:
-                    return true;
                 case R.id.navigation_matches:
                     startActivity(new Intent(ProfileActivity.this, MatchesActivity.class));
 
@@ -126,8 +141,8 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_log_out:
-                FirebaseAuth.getInstance().signOut();
-                finish();
+                //FirebaseAuth.getInstance().signOut();
+                //finish();
 
                 return true;
 
@@ -226,4 +241,81 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void initReceivedConnectionsListener() {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("registered").child(myUsername).child("received");
+        reference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
+                if (sentAdapter.containsConnectionMatchByName(conn.getName())) {
+                    Toast.makeText(ProfileActivity.this, "You have a new match!", Toast.LENGTH_SHORT);
+                    recAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
+                    tvMatches.setText("You have " + Integer.toString(recAdapter.getItemCount()) + " matches.");
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                recAdapter.removeConnectionMatchByKey(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
+
+    private void initSentConnectionsListener() {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("registered").child(myUsername).child("sent");
+        reference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
+
+                sentAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
+                tvConnectingWithYou.setText("You have sent " + Integer.toString(sentAdapter.getItemCount()) + " connections.");
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                sentAdapter.removeConnectionMatchByKey(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
+
 }

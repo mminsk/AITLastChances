@@ -83,12 +83,6 @@
                 android:text="Matches"
                 android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/tvYourConnections"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Connections"
-                android:textSize="20sp" />
 
 
             <TextView

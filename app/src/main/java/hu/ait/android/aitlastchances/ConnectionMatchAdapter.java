@@ -43,7 +43,7 @@ public class ConnectionMatchAdapter extends RecyclerView.Adapter<ConnectionMatch
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_posts, parent, false);
+        View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_connection_match, parent, false);
 
         return new ViewHolder(row);
     }
