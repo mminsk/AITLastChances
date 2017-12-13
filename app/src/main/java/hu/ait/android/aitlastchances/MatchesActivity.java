@@ -101,9 +101,7 @@ public class MatchesActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
-                if (conn.getImageUrl() == null && dataSnapshot.child("image").getValue() != null) {
-                    conn.setImageUrl(Uri.parse(dataSnapshot.child("image").getValue(String.class)));
-                }
+
                 sentAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
             }
 

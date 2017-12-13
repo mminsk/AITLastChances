@@ -158,25 +158,32 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void uploadProfileImage(final String... imageUrl) {
-        final Uri myImageUrl = Uri.parse(imageUrl[0]);
+        final String myImageUrl = imageUrl[0];
         if (imageUrl != null && imageUrl.length>0) {
+
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setPhotoUri(myImageUrl)
+                    .setPhotoUri(Uri.parse(myImageUrl))
                     .build();
-            user.updateProfile(profileUpdates)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(ProfileActivity.this, "User profile image updated.", Toast.LENGTH_SHORT).show();
+            user.updateProfile(profileUpdates);
+            Toast.makeText(ProfileActivity.this, "Getting my connection match", Toast.LENGTH_SHORT).show();
 
-                            }
-                        }
-                    });
+            final DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child("registered").child(myUsername);
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ConnectionMatch newConnMatch = new ConnectionMatch(myUsername);
+                    newConnMatch.setImageUrl(myImageUrl);
+                    myRef.child("connectionmatch").removeValue();
+                    myRef.child("connectionmatch").setValue(newConnMatch);
+                }
 
-            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child("registered").child(myUsername);
-            myRef.child("image").setValue(imageUrl[0]);
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(ProfileActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+            });
         }
 
 

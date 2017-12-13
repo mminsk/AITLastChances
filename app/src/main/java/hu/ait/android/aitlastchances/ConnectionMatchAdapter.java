@@ -52,9 +52,9 @@ public class ConnectionMatchAdapter extends RecyclerView.Adapter<ConnectionMatch
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ConnectionMatch connectionMatch = connectionMatchList.get(position);
         holder.tvName.setText(connectionMatch.getName());
-        Uri imageUrl = connectionMatch.getImageUrl();
+        String imageUrl = connectionMatch.getImageUrl();
         if (imageUrl != null) {
-            Glide.with(context).load(imageUrl).into(holder.ivImage);
+            Glide.with(context).load(Uri.parse(imageUrl)).into(holder.ivImage);
 
         }
 

@@ -70,8 +70,17 @@ public class ConnectionsActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
+                if (adapter.containsConnectionMatchByName(conn.getName())) {
+                    Toast.makeText(ConnectionsActivity.this, "Oops, you already connected with this person!", Toast.LENGTH_SHORT).show();
+                }
+                else {
 
-                adapter.addConnectionMatch(conn, dataSnapshot.getKey());
+                    adapter.addConnectionMatch(conn, dataSnapshot.getKey());
+
+
+                    Toast.makeText(ConnectionsActivity.this, "Your connection was sent!", Toast.LENGTH_SHORT).show();
+
+                }
             }
 
             @Override
@@ -124,18 +133,23 @@ public class ConnectionsActivity extends AppCompatActivity {
         }
     }
 
-    private void addConnection(String connection) {
-        final String nameToConnectWith = connection;
-        final String key = ref.child("registered").child(myUsername).push().getKey();
-        ConnectionMatch toConnection = new ConnectionMatch(connection);
+    private void addConnection(final String nameToConnectWith) {
+        // Find ConnectionMatch of person you want to connect with in registered tree, and add it to my "sent" list
 
-        FirebaseDatabase.getInstance().getReference().child("registered").child(myUsername).addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.child("registered").child(nameToConnectWith).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ConnectionMatch fromConnection = dataSnapshot.getValue(ConnectionMatch.class);
-                if (fromConnection != null) {
-                    FirebaseDatabase.getInstance().getReference().child("registered").child(nameToConnectWith).child("received").child(key).setValue(fromConnection);
+                // datasnapshot contains person's ConnectionMatch
+                ConnectionMatch newConnectionToSend = dataSnapshot.child("connectionmatch").getValue(ConnectionMatch.class);
+
+                if (newConnectionToSend == null) {
+                    newConnectionToSend = new ConnectionMatch(nameToConnectWith);
                 }
+
+
+                // now add this to my list of "sent" connections
+                String key = ref.child(myUsername).child("sent").push().getKey();
+                ref.child("registered").child(myUsername).child("sent").child(key).setValue(newConnectionToSend);
             }
 
             @Override
@@ -144,37 +158,24 @@ public class ConnectionsActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseDatabase.getInstance().getReference().child("registered").child(nameToConnectWith).addListenerForSingleValueEvent(new ValueEventListener() {
+        // Now add my ConnectionMatch to new connection's "received" list
+
+        ref.child("registered").child(myUsername).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ConnectionMatch toConnection = dataSnapshot.getValue(ConnectionMatch.class);
-
-                if (toConnection != null) {
-                    if (dataSnapshot.child("image").getValue(String.class) != null && toConnection.getImageUrl() == null) {
-                        toConnection.setImageUrl(Uri.parse(dataSnapshot.child("image").getValue(String.class)));
-                    }
-                    FirebaseDatabase.getInstance().getReference().child("registered").child(myUsername).child("sent").child(key).setValue(toConnection).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(ConnectionsActivity.this, "Connection created", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+                // datasnapshot should contain my ConnectionMatch object
+                ConnectionMatch myConnectionData = dataSnapshot.child("connectionmatch").getValue(ConnectionMatch.class);
+                String key = ref.child(nameToConnectWith).child("received").push().getKey();
+                ref.child("registered").child(nameToConnectWith).child("received").child(key).setValue(myConnectionData);
             }
-
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-
-
 
 
     }
-
-
 }
 

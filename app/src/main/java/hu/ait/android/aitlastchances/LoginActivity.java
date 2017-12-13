@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         users.add("Test User2");
         users.add("Test User3");
         for (String user : users) {
-            ref.child("registered").child(user).setValue(new ConnectionMatch(user));
+            ref.child("registered").child(user).child("connectionmatch").setValue(new ConnectionMatch(user));
         }
 
 
