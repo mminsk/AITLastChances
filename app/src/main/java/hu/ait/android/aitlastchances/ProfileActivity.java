@@ -54,6 +54,8 @@ public class ProfileActivity extends AppCompatActivity {
     TextView tvConnectingWithYou;
     @BindView(R.id.tvMatches)
     TextView tvMatches;
+    @BindView(R.id.tvName)
+    TextView tvName;
 
     private String myUsername;
 
@@ -71,18 +73,27 @@ public class ProfileActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         requestNeededPermission();
 
-        myUsername = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            myUsername = currentUser.getDisplayName();
+            tvName.setText("Hi, " + myUsername + "!");
+            final Uri myImageUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+            if (myImageUrl != null) {
+                Glide.with(ProfileActivity.this).load(myImageUrl).into(imgUpload);
+                uploadProfileImage(myImageUrl.toString());
+            }
 
-        final Uri myImageUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
-        if (myImageUrl != null) {
-            Glide.with(ProfileActivity.this).load(myImageUrl).into(imgUpload);
-            uploadProfileImage(myImageUrl.toString());
+            sentAdapter = new ConnectionMatchAdapter(this);
+            recAdapter = new ConnectionMatchAdapter(this);
+            initSentConnectionsListener();
+            initReceivedConnectionsListener();
         }
 
-        sentAdapter = new ConnectionMatchAdapter(this);
-        recAdapter = new ConnectionMatchAdapter(this);
-        initSentConnectionsListener();
-        initReceivedConnectionsListener();
+        else {
+            tvName.setText("Current user is null");
+        }
+
+
 
 
 
@@ -141,8 +152,10 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_log_out:
-                //FirebaseAuth.getInstance().signOut();
-                //finish();
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
 
                 return true;
 

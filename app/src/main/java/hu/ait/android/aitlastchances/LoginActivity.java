@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this,
                                                 "user not in registered", Toast.LENGTH_SHORT).show();
 
-                                        ref.child("registered").child(username).setValue(uid);
+                                        ref.child("registered").child(username).setValue(new ConnectionMatch(username));
                                     }
                                 }
 
@@ -157,19 +157,11 @@ public class LoginActivity extends AppCompatActivity {
                 progressDialog.dismiss();
 
                 if (task.isSuccessful()) {
-                    // open messages Activity
-                    FirebaseUser fbUser = task.getResult().getUser();
+                    // open profile Activity
                     final String username = etFirstName.getText().toString() + " " + etLastName.getText().toString();
-                    final String uid = fbUser.getUid();
-                    if (ref.child("active_users").child(uid).getRoot() == null) {
-                                ref.child("active_users").child(uid).setValue(username);
-                                //user doesnt exist, do something
-                            }
-
-
-
-
-
+                    FirebaseUser fbUser = task.getResult().getUser();
+                    fbUser.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(username).build());
+                    Toast.makeText(LoginActivity.this, "changed display name", Toast.LENGTH_SHORT);
                     startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
 
                 } else {
