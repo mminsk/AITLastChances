@@ -15,23 +15,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hu.ait.android.aitlastchances.data.ConnectionMatch;
-import hu.ait.android.aitlastchances.data.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -49,8 +41,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference ref;
+    private String username;
 
     private ProgressDialog progressDialog;
+    private ArrayList<String> registeredUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,90 +54,29 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         firebaseAuth = FirebaseAuth.getInstance();
         ref = FirebaseDatabase.getInstance().getReference();
-
-        loadRegisteredUsers(ref);
+        registeredUsers = loadRegisteredUsers(ref);
 
     }
 
-    private void loadRegisteredUsers(DatabaseReference ref) {
+    private ArrayList<String> loadRegisteredUsers(DatabaseReference ref) {
 
         ArrayList<String> users = new ArrayList<String>();
         users.add("Emma Kennelly");
         users.add("Madison Minsk");
-        users.add("Test User1");
-        users.add("Test User2");
-        users.add("Test User3");
+        users.add("Isaac Gluck");
+        users.add("Anders Bando-Hess");
+        users.add("Ellen Smalley");
+        users.add("Neerja Thakkar");
+        users.add("Aishu Nallapillai");
+        users.add("Elizabeth Hart");
+
         for (String user : users) {
             ref.child("registered").child(user).child("connectionmatch").setValue(new ConnectionMatch(user));
         }
 
-
+        return users;
     }
 
-    @OnClick(R.id.btnRegister)
-    void registerClick() {
-
-        if (!isFormValid()) {
-            return;
-        }
-
-        showProgressDialog();
-
-        firebaseAuth.createUserWithEmailAndPassword(etEmail.getText().toString(),
-                etPassword.getText().toString()).addOnCompleteListener(
-                new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-
-
-                        if (task.isSuccessful()) {
-                            final String username = etFirstName.getText().toString() + " " + etLastName.getText().toString();
-                            final FirebaseUser fbUser = task.getResult().getUser();
-
-                            ref.child("registered").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot snapshot) {
-                                    if (snapshot.getValue() != null) {
-                                        if (snapshot.child("email").getValue() == null) {
-                                            ref.child("registered").child(username).child("email").setValue(fbUser.getEmail());
-                                        }
-                                        else {
-                                            Toast.makeText(LoginActivity.this,
-                                                    "You are already registered for AIT Last Chances!", Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-                                        Toast.makeText(LoginActivity.this,
-                                                "Congratulations, you are registered!", Toast.LENGTH_SHORT).show();
-
-                                        //user exists, do something
-                                    } else {
-                                        Toast.makeText(LoginActivity.this,
-                                                "User is not registered for AIT Last Chances!", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-
-
-                            });
-                            fbUser.updateProfile(new UserProfileChangeRequest.Builder().
-                                    setDisplayName(username).build());
-
-//                            Toast.makeText(LoginActivity.this,
-//                                    "Registration ok", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Error: "+
-                                    task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-    }
 
     @OnClick(R.id.btnLogin)
     void loginClick() {
@@ -153,6 +86,15 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         showProgressDialog();
+        final String username = etFirstName.getText().toString() + " " + etLastName.getText().toString();
+
+        if (!registeredUsers.contains(username)) {
+            Toast.makeText(LoginActivity.this,
+                    "Oops! This name is not registered with AIT Last Chances",
+                    Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
+            return;
+        }
 
         firebaseAuth.signInWithEmailAndPassword(
                 etEmail.getText().toString(),
@@ -167,9 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                     final String username = etFirstName.getText().toString() + " " + etLastName.getText().toString();
                     FirebaseUser fbUser = task.getResult().getUser();
                     fbUser.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(username).build());
-                    Toast.makeText(LoginActivity.this, "changed display name", Toast.LENGTH_SHORT);
                     startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
-
 
                 } else {
                     Toast.makeText(LoginActivity.this,
@@ -213,14 +153,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return true;
-    }
-
-    private String usernameFromEmail(String email) {
-        if (email.contains("@")) {
-            return email.split("@")[0];
-        } else {
-            return email;
-        }
     }
 
 

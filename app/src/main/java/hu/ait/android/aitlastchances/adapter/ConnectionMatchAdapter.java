@@ -53,7 +53,7 @@ public class ConnectionMatchAdapter extends RecyclerView.Adapter<ConnectionMatch
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        ConnectionMatch connectionMatch = connectionMatchList.get(holder.getAdapterPosition() );
+        ConnectionMatch connectionMatch = connectionMatchList.get(holder.getAdapterPosition());
         holder.tvName.setText(connectionMatch.getName());
         FirebaseStorage.getInstance().getReference().child("images").child(connectionMatch.getName()+".jpg").getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -61,19 +61,13 @@ public class ConnectionMatchAdapter extends RecyclerView.Adapter<ConnectionMatch
                     public void onSuccess(Uri uri) {
                         Glide.with(context).load(uri).into(holder.ivImage);
                     }
-                        // Got the download URL for 'users/me/profile.png'
+
                     });
+
+
+
     }
 
-    public void removeConnectionMatch(int index) {
-        //postsRef = FirebaseDatabase.getInstance().getReference();
-
-        //postsRef.child("posts").child(postKeys.get(index)).removeValue();
-
-        //connectionMatchList.remove(index);
-        //postKeys.remove(index);
-        //notifyItemRemoved(index);
-    }
 
     public void removeConnectionMatchByKey(String key) {
         int index = postKeys.indexOf(key);

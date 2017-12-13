@@ -42,6 +42,7 @@ import java.io.ByteArrayOutputStream;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hu.ait.android.aitlastchances.adapter.ConnectionMatchAdapter;
 import hu.ait.android.aitlastchances.data.ConnectionMatch;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -96,10 +97,6 @@ public class ProfileActivity extends AppCompatActivity {
         else {
             tvName.setText("Current user is null");
         }
-
-
-
-
 
     }
 
@@ -212,27 +209,7 @@ public class ProfileActivity extends AppCompatActivity {
                     .setPhotoUri(Uri.parse(myImageUrl))
                     .build();
             user.updateProfile(profileUpdates);
-            final DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child("registered").child(myUsername);
-            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    ConnectionMatch newConnMatch = new ConnectionMatch(myUsername);
-                    newConnMatch.setImageUrl(myImageUrl);
-                    myRef.child("connectionmatch").removeValue();
-                    myRef.child("connectionmatch").setValue(newConnMatch);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(ProfileActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-
-                }
-            });
         }
-
-
-
-
 
     }
 

@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import hu.ait.android.aitlastchances.adapter.ConnectionMatchAdapter;
 import hu.ait.android.aitlastchances.data.ConnectionMatch;
 
 public class MatchesActivity extends AppCompatActivity {
