@@ -212,8 +212,6 @@ public class ProfileActivity extends AppCompatActivity {
                     .setPhotoUri(Uri.parse(myImageUrl))
                     .build();
             user.updateProfile(profileUpdates);
-            Toast.makeText(ProfileActivity.this, "Getting my connection match", Toast.LENGTH_SHORT).show();
-
             final DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child("registered").child(myUsername);
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -284,6 +282,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 recAdapter.removeConnectionMatchByKey(dataSnapshot.getKey());
+                matchesAdapter.removeConnectionMatchByKey(dataSnapshot.getKey());
             }
 
             @Override
@@ -311,6 +310,11 @@ public class ProfileActivity extends AppCompatActivity {
 
                 sentAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
                 tvSentConnections.setText("You have sent " + Integer.toString(sentAdapter.getItemCount()) + " connections.");
+                if (recAdapter.containsConnectionMatchByName(conn.getName())) {
+                    Toast.makeText(ProfileActivity.this, "You have a new match!", Toast.LENGTH_SHORT);
+                    matchesAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
+                    tvMatches.setText("You have " + Integer.toString(matchesAdapter.getItemCount()) + " matches!");
+                }
             }
 
             @Override
