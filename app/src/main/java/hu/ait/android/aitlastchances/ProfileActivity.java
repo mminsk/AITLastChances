@@ -52,6 +52,8 @@ public class ProfileActivity extends AppCompatActivity {
     ImageView imgUpload;
     @BindView(R.id.tvConnectingWithYou)
     TextView tvConnectingWithYou;
+    @BindView(R.id.tvSentConnections)
+    TextView tvSentConnections;
     @BindView(R.id.tvMatches)
     TextView tvMatches;
     @BindView(R.id.tvName)
@@ -61,6 +63,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ConnectionMatchAdapter recAdapter;
     private ConnectionMatchAdapter sentAdapter;
+    private ConnectionMatchAdapter matchesAdapter;
 
 
 
@@ -85,6 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             sentAdapter = new ConnectionMatchAdapter(this);
             recAdapter = new ConnectionMatchAdapter(this);
+            matchesAdapter = new ConnectionMatchAdapter(this);
             initSentConnectionsListener();
             initReceivedConnectionsListener();
         }
@@ -262,11 +266,14 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
+                recAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
+                tvConnectingWithYou.setText("You have " + Integer.toString(recAdapter.getItemCount()) + " people who want to connect with you.");
                 if (sentAdapter.containsConnectionMatchByName(conn.getName())) {
                     Toast.makeText(ProfileActivity.this, "You have a new match!", Toast.LENGTH_SHORT);
-                    recAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
-                    tvMatches.setText("You have " + Integer.toString(recAdapter.getItemCount()) + " matches.");
+                    matchesAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
+                    tvMatches.setText("You have " + Integer.toString(matchesAdapter.getItemCount()) + " matches!");
                 }
+
             }
 
             @Override
