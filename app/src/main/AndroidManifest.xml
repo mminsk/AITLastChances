@@ -26,7 +26,8 @@
         <activity android:name=".MatchesActivity" />
         <activity
             android:name=".CreateConnectionActivity"
-            android:theme="@style/Base.Theme.AppCompat.Light.Dialog"/>
+            android:theme="@style/Base.Theme.AppCompat.Light.Dialog" />
+        <activity android:name=".HelpActivity"></activity>
     </application>
 
 </manifest>

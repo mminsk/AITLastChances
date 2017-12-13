@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,10 +21,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -83,6 +80,7 @@ public class ProfileActivity extends AppCompatActivity {
         return true;
     }
 
+
     private void requestNeededPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.CAMERA) !=
@@ -123,6 +121,22 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_log_out:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+
+                return true;
+
+            case R.id.action_help:
+                startActivity(new Intent(ProfileActivity.this, HelpActivity.class));
+            default:
+                return true;
+        }
+    }
 
 
     private void uploadImage() throws Exception {
