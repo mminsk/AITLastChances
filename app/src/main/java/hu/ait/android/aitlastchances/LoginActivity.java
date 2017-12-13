@@ -99,21 +99,28 @@ public class LoginActivity extends AppCompatActivity {
 
                         if (task.isSuccessful()) {
                             final String username = etFirstName.getText().toString() + " " + etLastName.getText().toString();
-                            FirebaseUser fbUser = task.getResult().getUser();
-                            final String uid = fbUser.getUid();
-                            ref.child("registered").child(username).setValue(uid);
+                            final FirebaseUser fbUser = task.getResult().getUser();
 
-                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                            ref.child("registered").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot snapshot) {
-                                    if (snapshot.child("registered").hasChild(username)) {
+                                    if (snapshot.getValue() != null) {
+                                        if (snapshot.child("email").getValue() == null) {
+                                            ref.child("registered").child(username).child("email").setValue(fbUser.getEmail());
+                                        }
+                                        else {
+                                            Toast.makeText(LoginActivity.this,
+                                                    "You are already registered for AIT Last Chances!", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        Toast.makeText(LoginActivity.this,
+                                                "Congratulations, you are registered!", Toast.LENGTH_SHORT).show();
 
                                         //user exists, do something
                                     } else {
                                         Toast.makeText(LoginActivity.this,
-                                                "user not in registered", Toast.LENGTH_SHORT).show();
+                                                "User is not registered for AIT Last Chances!", Toast.LENGTH_SHORT).show();
 
-                                        ref.child("registered").child(username).setValue(new ConnectionMatch(username));
                                     }
                                 }
 
@@ -127,8 +134,8 @@ public class LoginActivity extends AppCompatActivity {
                             fbUser.updateProfile(new UserProfileChangeRequest.Builder().
                                     setDisplayName(username).build());
 
-                            Toast.makeText(LoginActivity.this,
-                                    "Registration ok", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(LoginActivity.this,
+//                                    "Registration ok", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(LoginActivity.this, "Error: "+
                                     task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -140,7 +147,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnLogin)
     void loginClick() {
-        startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
 
         if (!isFormValid()) {
             return;
@@ -163,6 +169,7 @@ public class LoginActivity extends AppCompatActivity {
                     fbUser.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(username).build());
                     Toast.makeText(LoginActivity.this, "changed display name", Toast.LENGTH_SHORT);
                     startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+
 
                 } else {
                     Toast.makeText(LoginActivity.this,
