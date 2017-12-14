@@ -21,9 +21,6 @@ import java.util.List;
 import hu.ait.android.aitlastchances.R;
 import hu.ait.android.aitlastchances.data.ConnectionMatch;
 
-/**
- * Created by madisonminsk on 11/23/17.
- */
 
 public class ConnectionMatchAdapter extends RecyclerView.Adapter<ConnectionMatchAdapter.ViewHolder>{
 
@@ -61,8 +58,6 @@ public class ConnectionMatchAdapter extends RecyclerView.Adapter<ConnectionMatch
                     }
 
                     });
-
-
 
     }
 

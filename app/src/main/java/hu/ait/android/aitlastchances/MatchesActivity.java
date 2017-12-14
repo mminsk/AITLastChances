@@ -113,13 +113,7 @@ public class MatchesActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
-
-
-
-
 
 }
 

@@ -126,9 +126,7 @@ public class ProfileActivity extends AppCompatActivity {
                             android.Manifest.permission.CAMERA},
                     101);
         } else {
-            // we have the permission
             btnUpload.setVisibility(View.VISIBLE);
-
         }
     }
 
