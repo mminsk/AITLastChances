@@ -288,7 +288,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if (recAdapter.containsConnectionMatchByName(conn.getName()) && (!matchesAdapter.containsConnectionMatchByName(conn.getName()))) {
                     Toast.makeText(ProfileActivity.this, R.string.you_have_new_match, Toast.LENGTH_SHORT);
                     matchesAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
-                    tvMatches.setText(getString(R.string.you_have) + Integer.toString(matchesAdapter.getItemCount()) + getString(R.string.matches));
+                    tvMatches.setText(getString(R.string.you_have) + " " + Integer.toString(matchesAdapter.getItemCount()) + " " + getString(R.string.matches));
                 }
             }
 
