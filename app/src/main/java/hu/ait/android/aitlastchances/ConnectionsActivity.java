@@ -29,6 +29,10 @@ public class ConnectionsActivity extends AppCompatActivity {
     public static final int REQUEST_NEW_CONNECTION = 101;
     private String myUsername;
     private ConnectionMatchAdapter adapter;
+
+    private ConnectionMatchAdapter recAdapter;
+    private ConnectionMatchAdapter matchesAdapter;
+
     ArrayList<ConnectionMatch> connections = null;
     private DatabaseReference ref;
 
@@ -42,6 +46,9 @@ public class ConnectionsActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewPosts);
         adapter = new ConnectionMatchAdapter(this);
+        recAdapter = new ConnectionMatchAdapter(this);
+        matchesAdapter = new ConnectionMatchAdapter(this);
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setReverseLayout(true);
@@ -56,7 +63,7 @@ public class ConnectionsActivity extends AppCompatActivity {
                 showCreateConnectionActivity();
             }
         });
-
+        initReceivedConnectionsListener();
         initConnectionsListener();
     }
 
@@ -67,7 +74,10 @@ public class ConnectionsActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
-
+                if (recAdapter.containsConnectionMatchByName(conn.getName()) && !matchesAdapter.containsConnectionMatchByName(conn.getName())) {
+                    Toast.makeText(ConnectionsActivity.this, R.string.you_have_new_match, Toast.LENGTH_SHORT);
+                    matchesAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
+                }
                 adapter.addConnectionMatch(conn, dataSnapshot.getKey());
 
             }
@@ -92,6 +102,44 @@ public class ConnectionsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void initReceivedConnectionsListener() {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("registered").child(myUsername).child("received");
+        reference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
+                recAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
+                if (adapter.containsConnectionMatchByName(conn.getName())) {
+                    Toast.makeText(ConnectionsActivity.this, R.string.you_have_new_match, Toast.LENGTH_LONG);
+                    matchesAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                recAdapter.removeConnectionMatchByKey(dataSnapshot.getKey());
+                matchesAdapter.removeConnectionMatchByKey(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
@@ -123,6 +171,9 @@ public class ConnectionsActivity extends AppCompatActivity {
             Toast.makeText(ConnectionsActivity.this, R.string.already_connected, Toast.LENGTH_SHORT).show();
             return;
         }
+        if (recAdapter.containsConnectionMatchByName(nameToConnectWith)) {
+            Toast.makeText(ConnectionsActivity.this, R.string.you_have_new_match, Toast.LENGTH_SHORT);
+        }
 
         ref.child("registered").child(nameToConnectWith).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -151,7 +202,13 @@ public class ConnectionsActivity extends AppCompatActivity {
                 ref.child("registered").child(nameToConnectWith).child("received").child(key).setValue(myConnectionData).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(ConnectionsActivity.this, R.string.connection_sent, Toast.LENGTH_SHORT).show();
+                        if (recAdapter.containsConnectionMatchByName(nameToConnectWith)) {
+                            Toast.makeText(ConnectionsActivity.this, R.string.you_have_new_match, Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(ConnectionsActivity.this, R.string.connection_sent, Toast.LENGTH_SHORT).show();
+
+                        }
                     }
                 });
             }
