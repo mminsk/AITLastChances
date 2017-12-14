@@ -5,12 +5,12 @@
 
 
     <item
-        android:title="Log Out"
+        android:title="@string/log_out"
         android:id="@+id/action_log_out"
         />
 
     <item
-        android:title="Help"
+        android:title="@string/help"
         android:id="@+id/action_help"
         />
 

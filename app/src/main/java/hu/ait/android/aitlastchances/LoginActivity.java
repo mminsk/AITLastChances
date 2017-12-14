@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (!registeredUsers.contains(username)) {
             Toast.makeText(LoginActivity.this,
-                    "Oops! This name is not registered with AIT Last Chances",
+                    R.string.not_registered,
                     Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
             return;
@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 } else {
                     Toast.makeText(LoginActivity.this,
-                            "Error: "+task.getException().getMessage(),
+                            getString(R.string.error)+task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
     private void showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Wait for it...");
+            progressDialog.setMessage(getString(R.string.wait_for_it));
         }
 
         progressDialog.show();
@@ -132,22 +132,22 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isFormValid() {
         if (TextUtils.isEmpty(etEmail.getText())) {
-            etEmail.setError("The email can not be empty");
+            etEmail.setError(getString(R.string.cannot_be_empty));
             return false;
         }
 
         if (TextUtils.isEmpty(etPassword.getText())) {
-            etPassword.setError("The password can not be empty");
+            etPassword.setError(getString(R.string.pswd_cannot_be_empty));
             return false;
         }
 
         if (TextUtils.isEmpty(etFirstName.getText())) {
-            etFirstName.setError("The first name can not be empty");
+            etFirstName.setError(getString(R.string.fnam_cannot_be_empty));
             return false;
         }
 
         if (TextUtils.isEmpty(etLastName.getText())) {
-            etLastName.setError("The last name can not be empty");
+            etLastName.setError(getString(R.string.lname_cannot_be_empty));
             return false;
         }
 

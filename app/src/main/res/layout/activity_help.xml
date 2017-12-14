@@ -10,7 +10,7 @@
         android:textSize="20sp"
         android:layout_margin="20dp"
         android:gravity="center"
-        android:text="Last Chances is here to help you connect with other AIT students while you still can!"/>
+        android:text="@string/help_1"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:textSize="17sp"
-            android:text="See the number of matches and connections you've made, and upload a profile picture!"/>
+            android:text="@string/help_2"/>
 
 
     </LinearLayout>
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:textSize="17sp"
-            android:text="Enter the name of the AIT student you would like to connect with. They will be added to your connections list."/>
+            android:text="@string/help_3"/>
 
 
     </LinearLayout>
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:textSize="17sp"
-            android:text="If one of your connections has added you as well, they will be on your matches list."/>
+            android:text="@string/help_4"/>
 
 
     </LinearLayout>
@@ -78,6 +78,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:text="This applicaiton was made by Madison Minsk and Emma Kennelly. Please connect them to set up a time to discuss any concerns or recommendations you may have. They prefer all meetings to take place at Starbucks. "/>
+        android:text="@string/help_5"/>
 
 </LinearLayout>

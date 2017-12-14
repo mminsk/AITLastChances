@@ -4,12 +4,12 @@
     <item
         android:id="@+id/navigation_matches"
         android:icon="@drawable/flame"
-        android:title="Matches" />
+        android:title="@string/matches_nav" />
 
     <item
         android:id="@+id/navigation_connections"
         android:icon="@drawable/handwave"
-        android:title="Connections" />
+        android:title="@string/connections_nav" />
 
 
 </menu>

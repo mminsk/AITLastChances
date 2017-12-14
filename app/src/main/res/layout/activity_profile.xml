@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Name"
+            android:text="@string/name_profile"
             android:textSize="20sp"
             android:layout_centerHorizontal="true"/>
 
@@ -75,34 +75,35 @@
             android:layout_height="35dp"
             android:layout_below="@+id/ivUploadImg"
             android:layout_centerHorizontal="true"
-            android:text="Upload"
+            android:text="@string/upload"
             android:backgroundTint="#ffffff"/>
 
         <LinearLayout
             android:layout_below="@+id/btnUpload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp">
 
             <TextView
             android:id="@+id/tvMatches"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Matches"
+            android:text="@string/matches_profile"
             android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tvSentConnections"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sent connections"
+                android:text="@string/sent_connections"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tvConnectingWithYou"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Connected with You"
+                android:text="@string/connected_with_you"
                 android:textSize="20sp" />
 
         </LinearLayout>

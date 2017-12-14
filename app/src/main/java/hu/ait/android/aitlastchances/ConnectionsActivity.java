@@ -120,7 +120,7 @@ public class ConnectionsActivity extends AppCompatActivity {
 
     private void addConnection(final String nameToConnectWith) {
         if (adapter.containsConnectionMatchByName(nameToConnectWith)) {
-            Toast.makeText(ConnectionsActivity.this, "Oops, you already connected with this person!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ConnectionsActivity.this, R.string.already_connected, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -151,7 +151,7 @@ public class ConnectionsActivity extends AppCompatActivity {
                 ref.child("registered").child(nameToConnectWith).child("received").child(key).setValue(myConnectionData).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(ConnectionsActivity.this, "Your connection was sent!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ConnectionsActivity.this, R.string.connection_sent, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

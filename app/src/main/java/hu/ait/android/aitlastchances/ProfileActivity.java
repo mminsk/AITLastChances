@@ -79,12 +79,15 @@ public class ProfileActivity extends AppCompatActivity {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             myUsername = currentUser.getDisplayName();
-            tvName.setText("Hi, " + myUsername + "!");
-            final Uri myImageUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
-            if (myImageUrl != null) {
-                Glide.with(ProfileActivity.this).load(myImageUrl).into(imgUpload);
-                uploadProfileImage(myImageUrl.toString());
-            }
+            tvName.setText(getString(R.string.hi) + myUsername + getString(R.string.exclamation));
+            FirebaseStorage.getInstance().getReference().child("images").child(myUsername+".jpg").getDownloadUrl()
+                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Glide.with(ProfileActivity.this).load(uri).into(imgUpload);
+                        }
+
+                    });
 
             sentAdapter = new ConnectionMatchAdapter(this);
             recAdapter = new ConnectionMatchAdapter(this);
@@ -94,10 +97,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         else {
-            tvName.setText("Current user is null");
+            tvName.setText(R.string.null_user);
         }
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -239,11 +243,11 @@ public class ProfileActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
                 recAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
-                tvConnectingWithYou.setText("You have " + Integer.toString(recAdapter.getItemCount()) + " people who want to connect with you.");
+                tvConnectingWithYou.setText(getString(R.string.you_have) + " " + Integer.toString(recAdapter.getItemCount()) + " " + getString(R.string.people_want_to_connect));
                 if (sentAdapter.containsConnectionMatchByName(conn.getName())) {
-                    Toast.makeText(ProfileActivity.this, "You have a new match!", Toast.LENGTH_SHORT);
+                    Toast.makeText(ProfileActivity.this, R.string.new_match, Toast.LENGTH_SHORT);
                     matchesAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
-                    tvMatches.setText("You have " + Integer.toString(matchesAdapter.getItemCount()) + " matches!");
+                    tvMatches.setText(getString(R.string.you_have) + " " + Integer.toString(matchesAdapter.getItemCount()) + " " + getString(R.string.matches));
                 }
             }
 
@@ -280,11 +284,11 @@ public class ProfileActivity extends AppCompatActivity {
                 ConnectionMatch conn = dataSnapshot.getValue(ConnectionMatch.class);
 
                 sentAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
-                tvSentConnections.setText("You have sent " + Integer.toString(sentAdapter.getItemCount()) + " connections.");
-                if (recAdapter.containsConnectionMatchByName(conn.getName())) {
-                    Toast.makeText(ProfileActivity.this, "You have a new match!", Toast.LENGTH_SHORT);
+                tvSentConnections.setText(getString(R.string.you_have_sent) + " " + Integer.toString(sentAdapter.getItemCount()) + " " + getString(R.string.connections));
+                if (recAdapter.containsConnectionMatchByName(conn.getName()) && (!matchesAdapter.containsConnectionMatchByName(conn.getName()))) {
+                    Toast.makeText(ProfileActivity.this, R.string.you_have_new_match, Toast.LENGTH_SHORT);
                     matchesAdapter.addConnectionMatch(conn, dataSnapshot.getKey());
-                    tvMatches.setText("You have " + Integer.toString(matchesAdapter.getItemCount()) + " matches!");
+                    tvMatches.setText(getString(R.string.you_have) + Integer.toString(matchesAdapter.getItemCount()) + getString(R.string.matches));
                 }
             }
 
